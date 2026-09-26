@@ -8,7 +8,7 @@ app.use(cors({ origin: '*', methods: ['GET', 'POST'], credentials: true }));
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'], credentials: true } });
 
-app.use(express.static('../frontend'));
+app.use(express.static('../'));
 
 // ===== FUNÇÕES AUXILIARES =====
 function randInt(min, max) {
