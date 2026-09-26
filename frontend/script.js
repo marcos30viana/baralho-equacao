@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3000'); // ou a URL do Render
+const socket = io('https://baralho-equacao-backend.onrender.com'); // ou a URL do Render
 
 console.log('Socket conectado?', socket.connected);
 
@@ -471,7 +471,7 @@ function renderizarMao() {
     maoSlotsEl.innerHTML = '';
     const mao = maos[meuId] || [];
     const montagemAtual = montagens[meuId] || [];
-    
+
     if (mao.length === 0) {
         const vazio = document.createElement('div');
         vazio.className = 'slot-vazio';
