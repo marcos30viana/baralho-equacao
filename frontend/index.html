@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📈 Baralho da Equação do 1º Grau</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="app">
+        <h1>📈 Baralho da Equação do 1º Grau</h1>
+
+        <div id="menu">
+            <div class="config-group">
+                <label>Jogadores:</label>
+                <select id="select-jogadores">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4" selected>4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div class="config-group">
+                <label>Cartas por jogador:</label>
+                <select id="select-cartas">
+                    <option value="4">4 (1 quarteto)</option>
+                    <option value="8">8 (2 quartetos)</option>
+                </select>
+            </div>
+            <div class="config-group">
+                <label>Tempo (s):</label>
+                <input type="number" id="input-tempo" value="30" min="10" max="120" />
+            </div>
+            <button id="btn-criar" class="btn-primary">Criar Sala</button>
+            <div class="config-group">
+                <input type="text" id="input-sala" placeholder="Código" />
+                <button id="btn-entrar" class="btn-secondary">Entrar</button>
+            </div>
+            <div id="status"></div>
+            <button id="btn-regras" class="btn-secondary">📖 Regras</button>
+        </div>
+
+        <div id="jogo" style="display: none;">
+            <div id="info">
+                <span id="sala-id"></span>
+                <span id="jogadores-info"></span>
+                <span id="turno-info"></span>
+                <span id="vez-comprar-info"></span>
+                <span id="timer-info">⏱️ 30s</span>
+            </div>
+
+            <div id="lateral">
+                <h4>👥 Jogadores</h4>
+                <div id="lista-jogadores"></div>
+            </div>
+
+            <div id="principal">
+                <div id="tabuleiro">
+                    <div class="monte">
+                        <h4>📚 Baralho</h4>
+                        <div id="baralho-info">0 cartas</div>
+                    </div>
+                    <div class="monte">
+                        <h4>🗑️ Descarte</h4>
+                        <div id="descarte-info">0 cartas</div>
+                        <div id="descarte-visual"></div>
+                        <div id="descarte-acao"></div>
+                    </div>
+                </div>
+
+                <div id="area-montagem">
+                    <h4>🧩 Montagem <span id="progresso-montagem">(0/4)</span></h4>
+                    <div id="montagem-slots" class="slots"></div>
+                </div>
+
+                <div id="area-mao">
+                    <h4>🃏 Suas cartas</h4>
+                    <div id="mao-slots" class="slots"></div>
+                </div>
+
+                <div id="controles">
+                    <button id="btn-comprar" class="btn-success">Comprar (monte)</button>
+                    <button id="btn-descartar" class="btn-danger" style="display:none;">Descartar</button>
+                    <button id="btn-montagem" class="btn-primary" style="display:none;">🧩 Levar para Montagem</button>
+                    <button id="btn-passar" class="btn-secondary" style="display:none;">⏭️ Passar</button>
+                </div>
+
+                <div id="chat-container">
+                    <div id="chat-header">
+                        <span>💬 Chat da Sala</span>
+                        <button id="btn-toggle-chat" class="btn-secondary" style="padding:2px 10px; font-size:0.8rem;">−</button>
+                    </div>
+                    <div id="chat-messages"></div>
+                    <div id="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Digite sua mensagem..." maxlength="200" />
+                        <button id="btn-enviar-chat" class="btn-primary" style="padding:6px 12px;">Enviar</button>
+                    </div>
+                </div>
+
+                <div id="mensagem"></div>
+            </div>
+        </div>
+
+        <div id="modal-nome" class="hidden">
+            <div id="modal-content">
+                <h2>Digite seu nome</h2>
+                <input type="text" id="input-nome" placeholder="Seu nome" maxlength="20" />
+                <button id="btn-confirmar-nome" class="btn-primary">Confirmar</button>
+                <p id="erro-nome" style="color:#ef4444; margin-top:10px;"></p>
+            </div>
+        </div>
+
+        <div id="modal-vitoria" class="hidden">
+            <div id="vitoria-content">
+                <h2>🏆 <span id="vitoria-nome"></span> venceu!</h2>
+                <div class="confetes">🎉✨🎊🌟🎈</div>
+                <button id="btn-reiniciar" class="btn-primary">🔄 Nova partida</button>
+            </div>
+        </div>
+
+        <div id="modal-regras" class="hidden">
+            <div id="modal-regras-content">
+                <h2>📖 Regras do Baralho da Equação</h2>
+                <div class="regras-texto">
+                    <p><strong>🎯 Objetivo</strong><br>
+                    Ser o primeiro jogador a completar <strong>1 ou 2 quartetos</strong> (dependendo do modo escolhido). Um quarteto é formado por 4 cartas da mesma equação: <strong>Equação</strong>, <strong>Gráfico</strong>, <strong>Solução</strong> e <strong>Classificação</strong>.</p>
+                    <p><strong>🃏 Como jogar</strong><br>
+                    - Cada jogador recebe 4 ou 8 cartas.<br>
+                    - Na sua vez, você pode comprar do monte ou pegar a carta descartada.<br>
+                    - Depois, pode montar quartetos arrastando cartas compatíveis para a área de montagem.<br>
+                    - Complete 1 ou 2 quartetos para vencer!</p>
+                    <p><strong>🧩 Montagem</strong><br>
+                    - Para formar um quarteto, as 4 cartas devem ter o mesmo <strong>id</strong> (mesma equação).<br>
+                    - Cada carta tem um tipo: equação, gráfico, solução ou classificação.</p>
+                </div>
+                <button id="btn-fechar-regras" class="btn-primary">Entendi!</button>
+            </div>
+        </div>
+
+        <footer>
+            <p class="assinatura">Prof. Me. Marcos Viana</p>
+            <small>Baralho da Equação do 1º Grau • Projeto educacional</small>
+        </footer>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
